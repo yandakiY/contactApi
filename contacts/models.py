@@ -6,9 +6,10 @@ class Contact(MyModel):
     
     name = models.CharField(max_length=200 , default=None)
     telephone = models.TextField(verbose_name="Telephone")
+    visible = models.BooleanField(verbose_name="Visible" , default=True)
     
     def __str__(self) -> str:
-        return f'{self.name}'
+        return f'{self.name} - {self.telephone}'
     
     class Meta:
         ordering = ["-id"]
