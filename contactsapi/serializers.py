@@ -14,7 +14,13 @@ class SaveContactSerializer(serializers.ModelSerializer):
         model = Contact
         fields = ["name" , "telephone"]
         
-        
+
+class UpdateContactSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Contact
+        fields = ["name" , "telephone"]
+
 class ChangeVisbleContactSerializer(serializers.ModelSerializer):
     
     # visible = serializers.ModelSerializer(source="visible" , data=False)

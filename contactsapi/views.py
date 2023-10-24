@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView , CreateAPIView , RetrieveAPIView , DestroyAPIView , UpdateAPIView
 from contacts.models import Contact
-from .serializers import ContactSerializer , SaveContactSerializer, ChangeVisbleContactSerializer
+from .serializers import ContactSerializer , SaveContactSerializer, ChangeVisbleContactSerializer , UpdateContactSerializer
 
 # Create your views here.
 
@@ -26,6 +26,14 @@ class GetContact(RetrieveAPIView):
 class DeleteContact(DestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+
+class UpdateContact(UpdateAPIView):
+    
+    serializer_class = UpdateContactSerializer
+    
+    def get_queryset(self):
+        return Contact.objects.all()
     
 class UpdateNotVisibleContact(UpdateAPIView):
     
