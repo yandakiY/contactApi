@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.views import Response
 from rest_framework.generics import ListAPIView , CreateAPIView , RetrieveAPIView , DestroyAPIView , UpdateAPIView
 from contacts.models import Contact
 from .serializers import ContactSerializer , SaveContactSerializer, ChangeVisbleContactSerializer , UpdateContactSerializer
@@ -30,10 +31,18 @@ class DeleteContact(DestroyAPIView):
 
 class UpdateContact(UpdateAPIView):
     
+    queryset = Contact.objects.all()
     serializer_class = UpdateContactSerializer
     
-    def get_queryset(self):
-        return Contact.objects.all()
+    def update(self, request, *args, **kwargs):
+        
+        instance = self.get_object()
+        serializer = self.get_serializer(instance , data = request.data , partial = True)
+        serializer.is_valid(raise_exception = True)
+        serializer.save() # update of object
+        
+        return Response(serializer.data)
+        
     
 class UpdateNotVisibleContact(UpdateAPIView):
     
