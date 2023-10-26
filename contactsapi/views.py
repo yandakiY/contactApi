@@ -9,9 +9,10 @@ from .serializers import ContactSerializer , SaveContactSerializer, ChangeVisble
 
 #  Get list of contacts
 class ListContactApi(ListAPIView):
-    queryset = Contact.objects.all()
+    queryset = Contact.objects.all().filter(visible = True)
     serializer_class = ContactSerializer
     
+
 # Add new contact
 class AddContact(CreateAPIView):
     queryset = Contact.objects.all()
@@ -44,10 +45,16 @@ class UpdateContact(UpdateAPIView):
         return Response(serializer.data)
         
     
-class UpdateNotVisibleContact(UpdateAPIView):
-    
+class UpdateVisibleContact(UpdateAPIView):
+    queryset = Contact.objects.all()
     serializer_class = ChangeVisbleContactSerializer
     
     def get_queryset(self):
         return Contact.objects.all()
     
+
+# Views contacts with prop visible = False
+class ListContactFalse(ListAPIView):
+    queryset = Contact.objects.all().filter(visible = False)
+    serializer_class = ContactSerializer
+  

@@ -12,6 +12,6 @@ class Contact(MyModel):
         return f'{self.name} - {self.telephone}'
     
     class Meta:
-        ordering = ["-id"]
+        ordering = ["name"]
     
 
