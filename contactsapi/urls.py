@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path , include
 from django.views.generic import TemplateView
-from .views import ListContactApi , AddContact , GetContact , DeleteContact , UpdateVisibleContact , UpdateContact , ListContactFalse
+from .views import ListContactApi , AddContact , GetContact , DeleteContact , UpdateVisibleContact , UpdateContact , ListContactFalse, GetPostForContact
 
 
 app_name = "contactsapi"
@@ -16,6 +16,8 @@ urlpatterns = [
     
     path('contact/delete/<str:pk>' , DeleteContact.as_view() , name="delete_contact"),# delete a contact by id
     path('contact/not_visible/<str:pk>' , UpdateVisibleContact.as_view() , name="not_visible"), # change value visible to false
-    path('contact/update_contact/<str:pk>' , UpdateContact.as_view() , name="update_contact")
+    path('contact/update_contact/<str:pk>' , UpdateContact.as_view() , name="update_contact"), # Update a contact
+    path('contact/posts/<str:pk>/' , GetPostForContact.as_view() , name="postforcontact"), # get post for each contact
+
     
 ]

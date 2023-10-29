@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import Response
 from rest_framework.generics import ListAPIView , CreateAPIView , RetrieveAPIView , DestroyAPIView , UpdateAPIView
 from contacts.models import Contact
-from .serializers import ContactSerializer , SaveContactSerializer, ChangeVisbleContactSerializer , UpdateContactSerializer
-
+from .serializers import ContactSerializer , SaveContactSerializer, ChangeVisbleContactSerializer , UpdateContactSerializer , ContactSerializerForPost
+from postsapi.serializers import PostListSerializer
 # Create your views here.
 
 
@@ -57,4 +57,31 @@ class UpdateVisibleContact(UpdateAPIView):
 class ListContactFalse(ListAPIView):
     queryset = Contact.objects.all().filter(visible = False)
     serializer_class = ContactSerializer
+    
+# Get Post associate to a contact
+class GetPostForContact(RetrieveAPIView):
+    
+    def get(self, request , pk , *args, **kwargs):
+        
+        try:
+            contact_obj = Contact.objects.get(id = pk)
+        except Contact.DoesNotExist:
+            return Response({"message": "Catégorie non trouvée"}, status=404)
+        
+        posts = contact_obj.post_set.all()
+        
+        posts_serializer = PostListSerializer(posts , many = True)
+        # posts_obj = [post for post in posts]
+        
+        # Reponse
+        
+        response_data = {
+            "id": contact_obj.id,
+            "name":contact_obj.name,
+            "telephone":contact_obj.telephone,
+            "posts":posts_serializer.data
+        }
+        
+        return Response(response_data)
+
   
