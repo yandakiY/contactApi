@@ -71,7 +71,6 @@ class GetPostForContact(RetrieveAPIView):
         posts = contact_obj.post_set.all()
         
         posts_serializer = PostListSerializer(posts , many = True)
-        # posts_obj = [post for post in posts]
         
         # Reponse
         

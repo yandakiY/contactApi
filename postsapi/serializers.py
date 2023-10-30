@@ -1,10 +1,18 @@
 from rest_framework import serializers
+from rest_framework.fields import ListField
 from posts.models import Post
+# from .serializers import 
+from contacts.models import Contact
 
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = "__all__"
 
 class PostListSerializer(serializers.ModelSerializer):
     
-    
+    author = ContactSerializer(many = True)
     class Meta:
         model = Post
         fields = [
@@ -13,16 +21,18 @@ class PostListSerializer(serializers.ModelSerializer):
             'description',
             'created',
             'status',
-            'author',
+            'author'
         ]
         
 
 class PostCreateSerializer(serializers.ModelSerializer):
     
+    
     class Meta:
         model = Post
         fields = [
-            'title',
-            'description',
-            'author'
+            "title", "description" , "author"
         ]
+    
+    
+    

@@ -15,8 +15,6 @@ class ContactSerializerForPost(serializers.ModelSerializer):
     telephone = serializers.CharField()
     posts = PostListSerializer(many = True)
     
-    # class Meta:
-    #     fields = ['id' , 'name' , 'telephone' ,'posts']
 
 class SaveContactSerializer(serializers.ModelSerializer):
     
