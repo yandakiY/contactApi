@@ -40,7 +40,7 @@ class UpdateContact(UpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance , data = request.data , partial = True)
         serializer.is_valid(raise_exception = True)
-        serializer.save() # update of object
+        serializer.save() # save the updating of object
         
         return Response(serializer.data)
         

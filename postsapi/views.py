@@ -23,6 +23,5 @@ class CreatePostView(CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
     
-        
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
