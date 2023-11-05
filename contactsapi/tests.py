@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.urls import reverse
+from posts.models import Post
 from contacts.models import Contact
 import json
 
@@ -19,6 +20,21 @@ class TestContactApi(APITestCase):
             name="ContactA" , telephone="04050607" , visible=True
         )
         
+        Post.objects.create(
+            title="Post 1" , description="Description 1"
+        )
+        Post.objects.create(
+            title="Post2" , description="Description 2"
+        )
+        
+        self.post1 = Post.objects.first()
+        self.post1.author.set((Contact.objects.first(),))
+        
+        self.post2 = Post.objects.last()
+        self.post2.author.set((Contact.objects.first() , Contact.objects.last()))
+        
+        
+        self.posts = Post.objects.all()
         self.contact = Contact.objects.all()
         
         
@@ -110,3 +126,35 @@ class TestContactApi(APITestCase):
         
         self.assertEqual(res.status_code , status.HTTP_204_NO_CONTENT)
         self.assertEqual(self.contact.count() , 1) # We have now 1 contact in Database
+        
+    
+    def test_get_post_a_contact(self):
+        
+        contact = self.contact.first() # contact to display posts
+        posts_contact = contact.post_set.all()
+        
+        url = reverse("contactsapi:postforcontact" , args=(contact.id,))
+        res = self.client.get(url)
+        
+        data_res = json.loads(res.content.decode("utf-8"))
+        
+        self.assertEqual(res.status_code , status.HTTP_200_OK)
+        self.assertEqual(data_res['name'] , contact.name)
+        self.assertEqual(data_res['telephone'] , contact.telephone)
+        self.assertEqual(len(data_res['posts']) , posts_contact.count())
+        self.assertEqual(data_res['posts'][0].get('id') ,str(posts_contact.first().id))
+        self.assertEqual(data_res['posts'][0].get('title') ,posts_contact.first().title)
+        self.assertEqual(data_res['posts'][0].get('description') ,posts_contact.first().description)
+        
+    
+    def test_get_post_a_contact_not_good_id(self):
+        
+        fake_id = Post.objects.first().id
+        
+        url = reverse("contactsapi:postforcontact" , args=(fake_id,))
+        res = self.client.get(url)
+        data_res = json.loads(res.content.decode("utf-8"))
+        
+        self.assertEqual(res.status_code , status.HTTP_404_NOT_FOUND)
+        self.assertEqual(data_res['message'] , "Catégorie non trouvée")
+        # print(data_res)
